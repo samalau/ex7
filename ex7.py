@@ -359,6 +359,9 @@ def gather_all_owners(root, arr):
 
 
 def display_owners_sorted():
+	if not owner_root:
+		print("No owners at all.")
+		return
 	sorted_owners = []
 	gather_all_owners(owner_root, sorted_owners)
 	if not sorted_owners:
@@ -380,7 +383,8 @@ def print_all_owners():
 	gather_all_owners(owner_root, sorted_owners)
 	if sorted_owners:
 		resolve_menu(TRAVERSAL, 'traversal')
-	print("No owners at all.")
+	else:
+		print("No owners at all.")
 
 
 def display_all_pokemon(owner_node):
@@ -439,7 +443,7 @@ def display_menu(menu_map, title=None):
 			print(generate_output(title_style, title=title))
 		else:
 			print(title)
-	if menu_map == STARTER_POKE:
+	if menu_map in [STARTER_POKE, TRAVERSAL]:
 		options = "\n".join([f"{k}) {v}" for k, v in menu_map.items()])
 	else:
 		options = "\n".join([f"{k}. {v}" for k, v in menu_map.items()])
@@ -452,8 +456,6 @@ def display_menu(menu_map, title=None):
 
 
 def resolve_menu(menu_map, title_key, owner_node=None):
-	if menu_map not in MENU.values():  # TODO IMPROVE MAIN HANDLING
-		return
 	if menu_map in [MAIN, TRAVERSAL]:
 		owner_node = None
 	if title_key in TITLE:
@@ -528,7 +530,8 @@ templates = {
 	"owner_pokemon_not_found": "No Pokemon named '{pokemon_name}' in {owner_name}'s Pokedex.",
 	"pokemon_released": "Releasing {pokemon_name} from {owner_name}.",
 	"main_menu_return": "Back to Main Menu.",
-	"goodbye_message": "Goodbye!"
+	"goodbye_message": "Goodbye!",
+	"keyboard_interrupt": "\nGoodbye!"
 }
 
 TITLE = {
@@ -559,11 +562,14 @@ def exit_program():
 
 
 def main():
-	while True:
-		global owner_node
-		owner_node = None
-		resolve_menu(MAIN, 'main')
-
+	try:
+		while True:
+			global owner_node
+			owner_node = None
+			resolve_menu(MAIN, 'main')
+	except KeyboardInterrupt:
+		print(generate_output("keyboard_interrupt"))
+		exit()
 
 if __name__ == "__main__":
 	main()
