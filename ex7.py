@@ -46,7 +46,7 @@ def new_pokedex():
 	try:
 		if any(owner['owner'].lower() == owner_name.lower() for owner in sorted_owners):
 			raise ValueError
-		starter_choice = display_menu(PROMPT['starter_pokechoice'], STARTER_POKE)
+		starter_choice = display_menu(STARTER_POKE, PROMPT['starter_pokechoice'])
 		starter_pokechoice = STARTER_POKE.get(starter_choice)
 		if not starter_pokechoice:
 			print("Invalid starter Pokémon.")  # TODO WORDING
@@ -191,7 +191,6 @@ def print_owner_and_pokedex(node):
 
 def bfs_traversal(root):
 	if not root:
-		print("No owners at all.")
 		return
 	queue = [root]
 	while queue:
@@ -205,7 +204,6 @@ def bfs_traversal(root):
 
 def pre_order_traversal(root):
 	if not root:
-		print("No owners at all.")
 		return
 	print_owner_and_pokedex(root)
 	pre_order_traversal(root['left'])
@@ -214,7 +212,6 @@ def pre_order_traversal(root):
 
 def in_order_traversal(root):
 	if not root:
-		print("No owners at all.")
 		return
 	in_order_traversal(root['left'])
 	print_owner_and_pokedex(root)
@@ -223,7 +220,6 @@ def in_order_traversal(root):
 
 def post_order_traversal(root):
 	if not root:
-		print("No owners at all.")
 		return
 	post_order_traversal(root['left'])
 	post_order_traversal(root['right'])
@@ -407,7 +403,10 @@ def existing_pokedex():
 
 def execute_action(menu_map, title, owner_node=None):
 	while True:
-		choice = display_menu(title, {k: v[0] for k, v in menu_map.items()})
+		if not title:
+			choice = display_menu({k: v[0] for k, v in menu_map.items()}, title)
+		else:
+			choice = display_menu({k: v[0] for k, v in menu_map.items()})
 		action_label, action = menu_map[choice]
 		if callable(action):
 			from inspect import signature
@@ -427,17 +426,18 @@ def prompt_user(prompt_key):
 	return response
 
 
-def display_menu(title, menu_map):
-	if title == TITLE.get('main'):
-		title_style = "section_title"
-	elif title in [TITLE.get("pokedex"), TITLE.get("filter")]:
-		title_style = "subsection_title"
-	else:
-		title_style = None
-	if title_style:
-		print(generate_output(title_style, title=title))
-	else:
-		print(title)
+def display_menu(menu_map, title=None):
+	if title:
+		if title == TITLE.get('main'):
+			title_style = "section_title"
+		elif title in [TITLE.get("pokedex"), TITLE.get("filter")]:
+			title_style = "subsection_title"
+		else:
+			title_style = None
+		if title_style:
+			print(generate_output(title_style, title=title))
+		else:
+			print(title)
 	if menu_map == STARTER_POKE:
 		options = "\n".join([f"{k}) {v}" for k, v in menu_map.items()])
 	else:
