@@ -383,6 +383,7 @@ def print_all_owners():
 	gather_all_owners(owner_root, sorted_owners)
 	if sorted_owners:
 		resolve_menu(TRAVERSAL, 'traversal')
+		return
 	else:
 		print("No owners at all.")
 
@@ -417,8 +418,7 @@ def execute_action(menu_map, title, owner_node=None):
 				action(owner_node)
 			else:
 				action()
-		if menu_map == TRAVERSAL:
-			menu_map = MAIN
+		if menu_map is TRAVERSAL:
 			return
 
 
@@ -433,17 +433,13 @@ def prompt_user(prompt_key):
 
 def display_menu(menu_map, title=None):
 	if title:
-		if title == TITLE.get('main'):
-			title_style = "section_title"
-		elif title in [TITLE.get("pokedex"), TITLE.get("filter")]:
-			title_style = "subsection_title"
-		else:
-			title_style = None
-		if title_style:
-			print(generate_output(title_style, title=title))
-		else:
-			print(title)
-	if menu_map in [STARTER_POKE, TRAVERSAL]:
+		title_style = (
+			"section_title" if title == TITLE.get('main')
+			else "subsection_title" if title in [TITLE.get("pokedex"), TITLE.get("filter")]
+			else None
+		)
+		print(generate_output(title_style, title=title) if title_style else title)
+	if menu_map is TRAVERSAL or menu_map is STARTER_POKE:
 		options = "\n".join([f"{k}) {v}" for k, v in menu_map.items()])
 	else:
 		options = "\n".join([f"{k}. {v}" for k, v in menu_map.items()])
@@ -456,7 +452,7 @@ def display_menu(menu_map, title=None):
 
 
 def resolve_menu(menu_map, title_key, owner_node=None):
-	if menu_map in [MAIN, TRAVERSAL]:
+	if menu_map is MAIN or menu_map is TRAVERSAL:
 		owner_node = None
 	if title_key in TITLE:
 		title = TITLE[title_key]
@@ -465,7 +461,7 @@ def resolve_menu(menu_map, title_key, owner_node=None):
 	else:
 		title = None
 	execute_action(menu_map, title, owner_node)
-	if menu_map == TRAVERSAL:
+	if menu_map is TRAVERSAL:
 		resolve_menu(MAIN, 'main')
 
 
