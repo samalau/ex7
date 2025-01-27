@@ -49,13 +49,15 @@ def new_pokedex():
 		print(PROMPT['starter_pokechoice'])
 		starter_choice = display_menu(STARTER_POKE)
 		starter_pokechoice = STARTER_POKE.get(starter_choice)
-		if not starter_pokechoice:
-			print("Invalid starter Pokémon.")  # TODO WORDING
-		else:
+		# if not starter_pokechoice:
+		# 	# print("Invalid starter Pokémon.")  # TODO WORDING
+		# else:
+		if starter_pokechoice:
 			starter_data = next((p for p in global_pokemon_data if p['Name'] == starter_pokechoice), None)
-			if not starter_data:
-				print("Starter Pokémon data not found.")  # TODO WORDING
-			else:
+			# if not starter_data:
+			# 	print("Starter Pokémon data not found.")  # TODO WORDING
+			# else:
+			if starter_pokechoice:
 				new_owner = create_owner_node(owner_name, starter_data)
 				owner_root = insert_owner_bst(owner_root, new_owner)
 				print(generate_output("pokedex_creation", owner_name=owner_name, starter_pokechoice=starter_pokechoice))
@@ -167,7 +169,6 @@ def add_pokemon_to_owner(owner_node):
 		)
 	except Exception:
 		print(generate_output("pokemon_invalid", pokemon_id=pokemon_id))
-		return
 
 
 def delete_owner_bst(root, owner_name):
@@ -286,7 +287,7 @@ def filter_pokemon_by_attack(owner_node):
 						raise ValueError
 				except ValueError:
 					min_attack = None
-					print(f"Invalid input: {user_input}\n")
+					# print(f"Invalid input: {user_input}\n")
 					continue;
 		else:
 			raise Exception
@@ -316,7 +317,7 @@ def filter_pokemon_by_hp(owner_node):
 						raise ValueError
 				except ValueError:
 					min_hp = None
-					print(f"Invalid input: {user_input}\n")
+					# print(f"Invalid input: {user_input}\n")
 					continue;
 		else:
 			raise Exception
@@ -412,6 +413,16 @@ def existing_pokedex():
 def execute_action(menu_map, owner_node=None):
 	while True:
 		choice = display_menu(menu_map)
+		if not choice:
+			print("Invalid choice.")
+			if menu_map in [MAIN, TRAVERSAL] or not owner_node:
+				return resolve_menu(MAIN, 'main')
+			elif menu_map == PERSONAL:
+				return resolve_menu(PERSONAL, 'pokedex', owner_node=owner_node)
+			elif menu_map == FILTER:
+				return resolve_menu(FILTER, 'main')
+			else:
+				return resolve_menu(MAIN, 'main')
 		action_label, action = menu_map[choice]
 		if menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]:
 			print("Back to Main Menu.")
@@ -445,11 +456,12 @@ def display_menu(menu_map):
 	else:
 		options = "\n".join([f"{k}. {v[0]}" for k, v in menu_map.items()])
 	print(options)
-	while True:
-		choice = input(PROMPT['choice'] + " ").strip()
-		if choice in menu_map:
-			return choice
-		print(f"Invalid input. Valid options: {', '.join(menu_map.keys())}")
+	# while True:
+	choice = input(PROMPT['choice'] + " ").strip()
+	if choice in menu_map:
+		return choice
+	else:
+		return None
 
 
 def resolve_menu(menu_map, title_key, owner_node=None):
