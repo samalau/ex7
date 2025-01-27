@@ -101,7 +101,7 @@ def release_pokemon_by_name(owner_node):
 	for pokemon in owner_node['pokedex']:
 		if pokemon['Name'].lower() == pokemon_name.lower():
 			owner_node['pokedex'].remove(pokemon)
-			print(generate_output("pokemon_released", pokemon_name=pokemon_name, owner_name={owner_node['owner']}))
+			print(generate_output("pokemon_released", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
 			return
 	print(generate_output("pokemon_not_found", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
 
@@ -369,7 +369,7 @@ def display_owners_sorted():
 		print("No owners at all.")
 		return
 	sorted_owners.sort(key=lambda x: len(x['pokedex']))
-	print(TITLE['ownersort_pokenum'])
+	print(generate_output("section_title", title=TITLE['ownersort_pokenum']))
 	for owner in sorted_owners:
 		print(generate_output("owner_by_pokemon",
 			owner_name=owner['owner'],
