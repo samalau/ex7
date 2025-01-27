@@ -269,19 +269,18 @@ def filter_pokemon_by_attack(owner_node):
 			min_attack = None
 			while not min_attack:
 				try:
-					user_input = prompt_user('attack_threshold')
-					if isinstance(user_input, int):
-						min_attack = int(user_input) + 1
-						if min_attack:
-							if any(p['Attack'] >= min_attack for p in owner_node['pokedex']):
-								for pokemon in owner_node['pokedex']:
-									if pokemon['Attack'] >= min_attack:
-										print(generate_output("pokemon_info", **pokemon))
-							else:
-								print(generate_output("no_criteria_match"))
-							return
+					user_input = float(prompt_user('attack_threshold'))
+					if user_input != int(user_input):
+						raise ValueError
+					min_attack = int(user_input) + 1
+					if min_attack:
+						if any(p['Attack'] >= min_attack for p in owner_node['pokedex']):
+							for pokemon in owner_node['pokedex']:
+								if pokemon['Attack'] >= min_attack:
+									print(generate_output("pokemon_info", **pokemon))
 						else:
-							raise ValueError
+							print(generate_output("no_criteria_match"))
+						return
 					else:
 						raise ValueError
 				except ValueError:
@@ -300,19 +299,18 @@ def filter_pokemon_by_hp(owner_node):
 			min_hp = None
 			while not min_hp:
 				try:
-					user_input = prompt_user('attack_threshold')
-					if isinstance(user_input, int):
-						min_hp = int(user_input) + 1
-						if min_hp:
-							if any(p['HP'] >= min_hp for p in owner_node['pokedex']):
-								for pokemon in owner_node['pokedex']:
-									if pokemon['HP'] >= min_hp:
-										print(generate_output("pokemon_info", **pokemon))
-							else:
-								print(generate_output("no_criteria_match"))
-							return
+					user_input = float(prompt_user('attack_threshold'))
+					if user_input != int(user_input):
+						raise ValueError
+					min_hp = int(user_input) + 1
+					if min_hp:
+						if any(p['HP'] >= min_hp for p in owner_node['pokedex']):
+							for pokemon in owner_node['pokedex']:
+								if pokemon['HP'] >= min_hp:
+									print(generate_output("pokemon_info", **pokemon))
 						else:
-							raise ValueError
+							print(generate_output("no_criteria_match"))
+						return
 					else:
 						raise ValueError
 				except ValueError:
@@ -452,6 +450,10 @@ def display_menu(menu_map, title=None):
 	while True:
 		choice = input(PROMPT['choice'] + " ").strip()
 		if choice in menu_map:
+			if menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]:
+				print(generate_output("main_menu_return"))
+			if menu_map == FILTER and choice == list(FILTER.keys())[-1]:
+				print(generate_output("pokedex_home_return"))
 			return choice
 		print(f"Invalid input. Valid options: {', '.join(menu_map.keys())}")
 
@@ -530,6 +532,7 @@ templates = {
 	"pokemon_invalid": "ID {pokemon_id} not found in Honen data.",
 	"owner_pokemon_not_found": "No Pokemon named '{pokemon_name}' in {owner_name}'s Pokedex.",
 	"pokemon_released": "Releasing {pokemon_name} from {owner_name}.",
+	"pokedex_home_return": "Back to Pokedex Menu.",
 	"main_menu_return": "Back to Main Menu.",
 	"goodbye_message": "Goodbye!",
 	"keyboard_interrupt": "\nGoodbye!"
