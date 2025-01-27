@@ -49,11 +49,11 @@ def new_pokedex():
 		starter_choice = display_menu(PROMPT['starter_pokechoice'], STARTER_POKE)
 		starter_pokechoice = STARTER_POKE.get(starter_choice)
 		if not starter_pokechoice:
-			print("Invalid starter Pokémon.")
+			print("Invalid starter Pokémon.")  # TODO WORDING
 		else:
 			starter_data = next((p for p in global_pokemon_data if p['Name'] == starter_pokechoice), None)
 			if not starter_data:
-				print("Starter Pokémon data not found.")
+				print("Starter Pokémon data not found.")  # TODO WORDING
 			else:
 				new_owner = create_owner_node(owner_name, starter_data)
 				owner_root = insert_owner_bst(owner_root, new_owner)
@@ -147,20 +147,20 @@ def evolve_pokemon_by_name(owner_node):
 
 
 def add_pokemon_to_owner(owner_node):
-	pokemon_name = prompt_user('pokename_add')
-	pokemon_data = next((p for p in global_pokemon_data if p['Name'].lower() == pokemon_name.lower()), None)
+	pokemon_id = prompt_user('pokename_add_id')
+	pokemon_data = next((p for p in global_pokemon_data if p['ID'] == pokemon_id), None)
 	if not pokemon_data:
 		print(generate_output("pokemon_invalid",
-			pokemon_name=pokemon_name,
-			owner_name=owner_node['owner']))
+			pokemon_id=pokemon_id,
+			))
 		return
-	if any(p['Name'].lower() == pokemon_name.lower() for p in owner_node['pokedex']):
+	if any(p['ID'] == pokemon_id for p in owner_node['pokedex']):
 		print(generate_output("pokemon_already_exists"))
 		return
 	owner_node['pokedex'].append(pokemon_data)
 	print(generate_output("pokemon_added",
-		pokemon_name=pokemon_name,
-		pokemon_id=pokemon_data['ID'],
+		pokemon_name=pokemon_data['Name'],
+		pokemon_id=pokemon_id,
 		owner_name=owner_node['owner']))
 
 
@@ -540,7 +540,7 @@ PROMPT = {
 	'owner_name': 'Owner name:',
 	'owner_delete': 'Enter owner to delete:',
 	'starter_pokechoice': 'Choose your starter Pokemon:',
-	'pokename_add': 'Enter Pokemon Name to add:',
+	'pokename_add_id': 'Enter Pokemon ID to add:',
 	'pokename_release': 'Enter Pokemon Name to release:',
 	'pokename_evolve': 'Enter Pokemon Name to evolve:',
 	'pokename_starting_letters': "Starting letter(s):",
