@@ -144,7 +144,9 @@ def evolve_pokemon_by_name(owner_node):
 			if duplicate_pokemon:
 				owner_node['pokedex'].remove(pokemon)
 				print(generate_output("pokemon_evolved_duplicate", new_pokemon_name=new_pokemon_name))
-			pokemon.update(new_pokemon_data)
+			else:
+				owner_node['pokedex'].remove(pokemon)
+				pokemon.update(new_pokemon_data)
 			return resolve_menu(PERSONAL, 'pokedex', owner_node)
 	print(f"Pokemon {pokemon_name} cannot be evolved in {owner_node['owner']}'s Pokedex.")  # TODO WORDING
 	return resolve_menu(PERSONAL, 'pokedex', owner_node)
