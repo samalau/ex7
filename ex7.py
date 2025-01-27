@@ -402,9 +402,9 @@ def existing_pokedex():
 def execute_action(menu_map, title, owner_node=None):
 	while True:
 		if not title:
-			choice = display_menu({k: v[0] for k, v in menu_map.items()}, title)
-		else:
 			choice = display_menu({k: v[0] for k, v in menu_map.items()})
+		else:
+			choice = display_menu({k: v[0] for k, v in menu_map.items()}, title)
 		action_label, action = menu_map[choice]
 		if callable(action):
 			from inspect import signature
@@ -454,7 +454,7 @@ def display_menu(menu_map, title=None):
 def resolve_menu(menu_map, title_key, owner_node=None):
 	if menu_map not in MENU.values():  # TODO IMPROVE MAIN HANDLING
 		return
-	if menu_map == MAIN:
+	if menu_map in [MAIN, TRAVERSAL]:
 		owner_node = None
 	if title_key in TITLE:
 		title = TITLE[title_key]
@@ -463,6 +463,8 @@ def resolve_menu(menu_map, title_key, owner_node=None):
 	else:
 		title = None
 	execute_action(menu_map, title, owner_node)
+	if menu_map == TRAVERSAL:
+		resolve_menu(MAIN, 'main')
 
 
 MAIN = {
