@@ -103,7 +103,7 @@ def release_pokemon_by_name(owner_node):
 			owner_node['pokedex'].remove(pokemon)
 			print(generate_output("pokemon_released", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
 			return
-	print(generate_output("pokemon_not_found", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
+	print(generate_output("owner_pokemon_not_found", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
 
 
 def evolve_pokemon_by_name(owner_node):
@@ -116,7 +116,7 @@ def evolve_pokemon_by_name(owner_node):
 	if any(p['Name'].lower() == pokemon_name.lower() for p in owner_node['pokedex']):
 		pass
 	else:
-		print(generate_output("pokemon_not_found", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
+		print(generate_output("owner_pokemon_not_found", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
 		return
 	for pokemon in owner_node['pokedex']:
 		if pokemon['Name'].lower() == pokemon_name.lower() and pokemon['Can Evolve'] == 'TRUE':
@@ -150,7 +150,7 @@ def add_pokemon_to_owner(owner_node):
 	pokemon_name = prompt_user('pokename_add')
 	pokemon_data = next((p for p in global_pokemon_data if p['Name'].lower() == pokemon_name.lower()), None)
 	if not pokemon_data:
-		print(generate_output("pokemon_not_found",
+		print(generate_output("pokemon_invalid",
 			pokemon_name=pokemon_name,
 			owner_name=owner_node['owner']))
 		return
@@ -521,7 +521,8 @@ templates = {
 	"no_criteria_match": "There are no Pokemons in this Pokedex that match the criteria.",
 	"pokemon_added": "Pokemon {pokemon_name} (ID {pokemon_id}) added to {owner_name}'s Pokedex.",
 	"pokemon_already_exists": "Pokemon already in the list. No changes made.",
-	"pokemon_not_found": "No Pokemon named '{pokemon_name}' in {owner_name}'s Pokedex.",
+	"pokemon_invalid": "ID {pokemon_id} not found in Honen data.",
+	"owner_pokemon_not_found": "No Pokemon named '{pokemon_name}' in {owner_name}'s Pokedex.",
 	"pokemon_released": "Releasing {pokemon_name} from {owner_name}.",
 	"main_menu_return": "Back to Main Menu.",
 	"goodbye_message": "Goodbye!"
