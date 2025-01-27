@@ -406,6 +406,7 @@ def existing_pokedex():
 		resolve_menu(PERSONAL, 'pokedex', owner_node)
 	else:
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
+		resolve_menu(MAIN, 'main')
 
 
 def execute_action(menu_map, owner_node=None):
