@@ -326,8 +326,7 @@ def filter_pokemon_by_hp(owner_node):
 							if pokemon['HP'] >= min_hp:
 								print(generate_output("pokemon_info", **pokemon))
 					else:
-						print(generate_output("pokemon_no_criteria_match"))
-					return 
+						raise Exception
 				else:
 					raise ValueError
 			except (ValueError, TypeError):
@@ -416,7 +415,7 @@ def display_all_pokemon(owner_node):
 		return resolve_menu(MAIN, 'main')
 	for pokemon in owner_node['pokedex']:
 		print(generate_output("pokemon_info", **pokemon))
-		return resolve_menu(PERSONAL, 'pokedex', owner_node)
+		return resolve_menu(FILTER, 'filter', owner_node)
 
 
 def existing_pokedex():
