@@ -171,8 +171,11 @@ def add_pokemon_to_owner(owner_node):
 				owner_name=owner_node['owner']
 			)
 		)
+		return resolve_menu(PERSONAL, 'pokedex', owner_node=owner_node)
 	except Exception:
 		print(generate_output("pokemon_invalid", pokemon_id=pokemon_id))
+		if not owner_node:
+			return resolve_menu(MAIN, 'main')
 		return resolve_menu(PERSONAL, 'pokedex', owner_node=owner_node)
 
 
