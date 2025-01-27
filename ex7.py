@@ -436,6 +436,8 @@ def display_menu(title, menu_map):
 		title_style = None
 	if title_style:
 		print(generate_output(title_style, title=title))
+	else:
+		print(title)
 	if menu_map == STARTER_POKE:
 		options = "\n".join([f"{k}) {v}" for k, v in menu_map.items()])
 	else:
