@@ -147,21 +147,26 @@ def evolve_pokemon_by_name(owner_node):
 
 
 def add_pokemon_to_owner(owner_node):
-	pokemon_id = prompt_user('pokename_add_id')
-	pokemon_data = next((p for p in global_pokemon_data if p['ID'] == pokemon_id), None)
-	if not pokemon_data:
-		print(generate_output("pokemon_invalid",
-			pokemon_id=pokemon_id,
-			))
+	try:
+		pokemon_id = int(prompt_user('pokename_add_id'))
+		pokemon_data = next((p for p in global_pokemon_data if p['ID'] == pokemon_id), None)
+		if not pokemon_data:
+			raise Exception
+		if any(p['ID'] == pokemon_id for p in owner_node['pokedex']):
+			print(generate_output("pokemon_already_exists"))
+			return
+		owner_node['pokedex'].append(pokemon_data)
+		print(
+			generate_output(
+				"pokemon_added",
+				pokemon_name=pokemon_data['Name'],
+				pokemon_id=pokemon_id,
+				owner_name=owner_node['owner']
+			)
+		)
+	except Exception:
+		print(generate_output("pokemon_invalid", pokemon_id=pokemon_id))
 		return
-	if any(p['ID'] == pokemon_id for p in owner_node['pokedex']):
-		print(generate_output("pokemon_already_exists"))
-		return
-	owner_node['pokedex'].append(pokemon_data)
-	print(generate_output("pokemon_added",
-		pokemon_name=pokemon_data['Name'],
-		pokemon_id=pokemon_id,
-		owner_name=owner_node['owner']))
 
 
 def delete_owner_bst(root, owner_name):
@@ -406,7 +411,7 @@ def existing_pokedex():
 
 def execute_action(menu_map, title, owner_node=None):
 	while True:
-		if not title:
+		if not title or menu_map == TRAVERSAL:
 			choice = display_menu({k: v[0] for k, v in menu_map.items()})
 		else:
 			choice = display_menu({k: v[0] for k, v in menu_map.items()}, title)
