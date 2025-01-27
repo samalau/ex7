@@ -151,6 +151,7 @@ def evolve_pokemon_by_name(owner_node):
 	print(f"Pokemon {pokemon_name} cannot be evolved in {owner_node['owner']}'s Pokedex.")  # TODO WORDING
 	return resolve_menu(PERSONAL, 'pokedex', owner_node)
 
+
 def add_pokemon_to_owner(owner_node):
 	try:
 		pokemon_id = prompt_user('pokename_add_id')
