@@ -25,7 +25,7 @@ def load_global_pokemon_data(filename):
 					continue
 		return data_list
 	except Exception as e:
-		print(f"{e}\n")
+		print(f"ERROR: {e}\n")
 
 
 global_pokemon_data = load_global_pokemon_data("hoenn_pokedex.csv")
@@ -151,13 +151,17 @@ def evolve_pokemon_by_name(owner_node):
 
 def add_pokemon_to_owner(owner_node):
 	try:
-		pokemon_id = int(prompt_user('pokename_add_id'))
+		pokemon_id = prompt_user('pokename_add_id')
+		try:
+			pokemon_id = int(pokemon_id)
+		except Exception:
+			raise Exception
 		pokemon_data = next((p for p in global_pokemon_data if p['ID'] == pokemon_id), None)
 		if not pokemon_data:
 			raise Exception
 		if any(p['ID'] == pokemon_id for p in owner_node['pokedex']):
 			print(generate_output("pokemon_already_exists"))
-			return
+			return resolve_menu(PERSONAL, 'pokedex', owner_node=owner_node)
 		owner_node['pokedex'].append(pokemon_data)
 		print(
 			generate_output(
@@ -169,6 +173,7 @@ def add_pokemon_to_owner(owner_node):
 		)
 	except Exception:
 		print(generate_output("pokemon_invalid", pokemon_id=pokemon_id))
+		return resolve_menu(PERSONAL, 'pokedex', owner_node=owner_node)
 
 
 def delete_owner_bst(root, owner_name):
@@ -272,7 +277,10 @@ def filter_pokemon_by_attack(owner_node):
 			while not min_attack:
 				try:
 					user_input = float(prompt_user('attack_threshold'))
-					if user_input != int(user_input):
+					try:
+						if user_input != int(user_input):
+							raise ValueError
+					except Exception:
 						raise ValueError
 					min_attack = int(user_input) + 1
 					if min_attack:
@@ -287,7 +295,6 @@ def filter_pokemon_by_attack(owner_node):
 						raise ValueError
 				except ValueError:
 					min_attack = None
-					# print(f"Invalid input: {user_input}\n")
 					continue;
 		else:
 			raise Exception
@@ -302,7 +309,10 @@ def filter_pokemon_by_hp(owner_node):
 			while not min_hp:
 				try:
 					user_input = float(prompt_user('attack_threshold'))
-					if user_input != int(user_input):
+					try:
+						if user_input != int(user_input):
+							raise ValueError
+					except Exception:
 						raise ValueError
 					min_hp = int(user_input) + 1
 					if min_hp:
@@ -317,7 +327,6 @@ def filter_pokemon_by_hp(owner_node):
 						raise ValueError
 				except ValueError:
 					min_hp = None
-					# print(f"Invalid input: {user_input}\n")
 					continue;
 		else:
 			raise Exception
