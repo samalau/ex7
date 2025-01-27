@@ -50,18 +50,16 @@ def new_pokedex():
 		print(PROMPT['starter_pokechoice'])
 		starter_choice = display_menu(STARTER_POKE)
 		starter_pokechoice = STARTER_POKE.get(starter_choice)
-		# if not starter_pokechoice:
-		# 	# print("Invalid starter Pokémon.")  # TODO WORDING
-		# else:
-		if starter_pokechoice:
+		if not starter_pokechoice:
+			print("Invalid choice.")
+		else:
 			starter_data = next((p for p in global_pokemon_data if p['Name'] == starter_pokechoice), None)
-			# if not starter_data:
-			# 	print("Starter Pokémon data not found.")  # TODO WORDING
-			# else:
-			if starter_pokechoice:
+			if not starter_data:
+				print("Invalid choice.")
+			else:
 				new_owner = create_owner_node(owner_name, starter_data)
 				owner_root = insert_owner_bst(owner_root, new_owner)
-				print(generate_output("pokedex_creation", owner_name=owner_name, starter_pokechoice=starter_pokechoice))
+				print(generate_output("pokemon_created", owner_name=owner_name, starter_pokechoice=starter_pokechoice))
 	except Exception:
 		print(generate_output("pokedex_already_exists", owner_name=owner_name))
 	finally:
@@ -92,9 +90,9 @@ def delete_pokedex():
 	owner_name = prompt_user('owner_delete')
 	if not find_owner_bst(owner_root, owner_name):
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
-		return
+		return resolve_menu(MAIN, 'main')
 	owner_root = delete_owner_bst(owner_root, owner_name)
-	print(generate_output("pokedex_deletion", owner_name=owner_name))
+	print(generate_output("pokedex_deleting", owner_name=owner_name))
 	return resolve_menu(MAIN, 'main')
 
 
@@ -105,9 +103,9 @@ def release_pokemon_by_name(owner_node):
 	for pokemon in owner_node['pokedex']:
 		if pokemon['Name'].lower() == pokemon_name.lower():
 			owner_node['pokedex'].remove(pokemon)
-			print(generate_output("pokemon_released", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
+			print(generate_output("pokemon_releasing", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
 			return resolve_menu(PERSONAL, 'pokedex', owner_node)
-	print(generate_output("owner_pokemon_not_found", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
+	print(generate_output("pokemon_not_in_pokedex", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
 	return resolve_menu(PERSONAL, 'pokedex', owner_node)
 
 
@@ -121,7 +119,7 @@ def evolve_pokemon_by_name(owner_node):
 	if any(p['Name'].lower() == pokemon_name.lower() for p in owner_node['pokedex']):
 		pass
 	else:
-		print(generate_output("owner_pokemon_not_found", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
+		print(generate_output("pokemon_not_in_pokedex", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
 		return
 	for pokemon in owner_node['pokedex']:
 		if pokemon['Name'].lower() == pokemon_name.lower() and pokemon['Can Evolve'] == 'TRUE':
@@ -137,15 +135,15 @@ def evolve_pokemon_by_name(owner_node):
 				old_pokemon_name=old_pokemon_name,
 				old_pokemon_id=old_pokemon_id,
 				new_pokemon_name=new_pokemon_name,
-				new_pokemon_id=new_pokemon_id))
+				new_pokemon_id=new_pokemon_id
+			))
 			duplicate_pokemon = next((
 				p for p in owner_node['pokedex']
-				if p['Name'].lower() == new_pokemon_name.lower()
-			), None)
+				if p['ID'] == new_pokemon_id)
+			, None)
 			if duplicate_pokemon:
-				owner_node['pokedex'].remove(duplicate_pokemon)
+				owner_node['pokedex'].remove(pokemon)
 				print(generate_output("pokemon_evolved_duplicate", new_pokemon_name=new_pokemon_name))
-				return resolve_menu(PERSONAL, 'pokedex', owner_node)
 			pokemon.update(new_pokemon_data)
 			return resolve_menu(PERSONAL, 'pokedex', owner_node)
 	print(f"Pokemon {pokemon_name} cannot be evolved in {owner_node['owner']}'s Pokedex.")  # TODO WORDING
@@ -257,7 +255,7 @@ def filter_pokemon_by_type(owner_node):
 		else:
 			raise Exception
 	except Exception:
-		print(generate_output("no_criteria_match"))
+		print(generate_output("pokemon_no_criteria_match"))
 	finally:
 		return resolve_menu(FILTER, 'filter', owner_node)
 
@@ -274,7 +272,7 @@ def filter_pokemon_evolvable(owner_node):
 		else:
 			raise Exception
 	except Exception:
-		print(generate_output("no_criteria_match"))
+		print(generate_output("pokemon_no_criteria_match"))
 	finally:
 		return resolve_menu(FILTER, 'filter', owner_node)
 
@@ -304,7 +302,7 @@ def filter_pokemon_by_attack(owner_node):
 		else:
 			raise Exception
 	except Exception:
-		print(generate_output("no_criteria_match"))
+		print(generate_output("pokemon_no_criteria_match"))
 	finally:
 		return resolve_menu(FILTER, 'filter', owner_node)
 
@@ -326,7 +324,7 @@ def filter_pokemon_by_hp(owner_node):
 							if pokemon['HP'] >= min_hp:
 								print(generate_output("pokemon_info", **pokemon))
 					else:
-						print(generate_output("no_criteria_match"))
+						print(generate_output("pokemon_no_criteria_match"))
 					return 
 				else:
 					raise ValueError
@@ -335,7 +333,7 @@ def filter_pokemon_by_hp(owner_node):
 		else:
 			raise Exception
 	except Exception:
-		print(generate_output("no_criteria_match"))
+		print(generate_output("pokemon_no_criteria_match"))
 	finally:
 		return resolve_menu(FILTER, 'filter', owner_node)
 
@@ -350,7 +348,7 @@ def filter_pokemon_by_name(owner_node):
 		else:
 			raise Exception
 	except Exception:
-		print(generate_output("no_criteria_match"))
+		print(generate_output("pokemon_no_criteria_match"))
 	finally:
 		return resolve_menu(FILTER, 'filter', owner_node)
 
@@ -413,12 +411,14 @@ def print_all_owners():
 
 def display_all_pokemon(owner_node):
 	if not owner_node:
-		return
+		return resolve_menu(MAIN, 'main')
 	for pokemon in owner_node['pokedex']:
 		print(generate_output("pokemon_info", **pokemon))
+		return resolve_menu(PERSONAL, 'pokedex', owner_node)
 
 
 def existing_pokedex():
+	global owner_node
 	owner_name = prompt_user('owner_name')
 	owner_node = find_owner_bst(owner_root, owner_name)
 	if owner_node:
@@ -429,31 +429,30 @@ def existing_pokedex():
 
 
 def execute_action(menu_map, owner_node=None):
-	while True:
-		choice = display_menu(menu_map)
-		if not choice:
-			if menu_map in [MAIN, TRAVERSAL] or not owner_node:
-				return resolve_menu(MAIN, 'main')
-			elif menu_map == PERSONAL:
-				return resolve_menu(PERSONAL, 'pokedex', owner_node=owner_node)
-			elif menu_map == FILTER:
-				return resolve_menu(FILTER, 'filter', owner_node)
-			else:
-				return resolve_menu(MAIN, 'main')
-		action_label, action = menu_map[choice]
-		if menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]:
-			print("Back to Main Menu.")
-		if menu_map == FILTER and choice == list(FILTER.keys())[-1]:
-			print("Back to Pokedex Menu.")
-		if callable(action):
-			from inspect import signature
-			action_args = signature(action).parameters
-			if owner_node and len(action_args) > 0:
-				action(owner_node)
-			else:
-				action()
-		if menu_map == TRAVERSAL:
+	choice = display_menu(menu_map)
+	if not choice:
+		if menu_map in [MAIN, TRAVERSAL] or not owner_node:
 			return resolve_menu(MAIN, 'main')
+		elif menu_map == PERSONAL:
+			return resolve_menu(PERSONAL, 'pokedex', owner_node=owner_node)
+		elif menu_map == FILTER:
+			return resolve_menu(FILTER, 'filter', owner_node)
+		else:
+			return resolve_menu(MAIN, 'main')
+	action_label, action = menu_map[choice]
+	if menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]:
+		print("Back to Main Menu.")
+	if menu_map == FILTER and choice == list(FILTER.keys())[-1]:
+		print("Back to Pokedex Menu.")
+	if callable(action):
+		from inspect import signature
+		action_args = signature(action).parameters
+		if owner_node and len(action_args) > 0:
+			action(owner_node)
+		else:
+			action()
+	if menu_map == TRAVERSAL:
+		return resolve_menu(MAIN, 'main')
 
 
 def generate_output(template_key, **kwargs):
@@ -473,7 +472,6 @@ def display_menu(menu_map):
 	else:
 		options = "\n".join([f"{k}. {v[0]}" for k, v in menu_map.items()])
 	print(options)
-	# while True:
 	choice = input(PROMPT['choice'] + " ").strip()
 	if choice in menu_map:
 		return choice
@@ -552,16 +550,16 @@ templates = {
 	"pokemon_evolved_duplicate": "{new_pokemon_name} was already present; releasing it immediately.",
 	"owner_info": "Owner: {owner_name}",
 	"owner_by_pokemon": "Owner: {owner_name} (has {pokemon_count} Pokemon)",
-	"pokedex_creation": "New Pokedex created for {owner_name} with starter {starter_pokechoice}.",
+	"pokemon_created": "New Pokedex created for {owner_name} with starter {starter_pokechoice}.",
 	"pokedex_already_exists": "Owner '{owner_name}' already exists. No new Pokedex created.",
 	"pokedex_not_found": "Owner '{owner_name}' not found.",
-	"pokedex_deletion": "Deleting {owner_name}'s entire Pokedex...\nPokedex deleted.",
-	"no_criteria_match": "There are no Pokemons in this Pokedex that match the criteria.",
+	"pokedex_deleting": "Deleting {owner_name}'s entire Pokedex...\nPokedex deleted.",
+	"pokemon_no_criteria_match": "There are no Pokemons in this Pokedex that match the criteria.",
 	"pokemon_added": "Pokemon {pokemon_name} (ID {pokemon_id}) added to {owner_name}'s Pokedex.",
 	"pokemon_already_exists": "Pokemon already in the list. No changes made.",
 	"pokemon_invalid": "ID {pokemon_id} not found in Honen data.",
-	"owner_pokemon_not_found": "No Pokemon named '{pokemon_name}' in {owner_name}'s Pokedex.",
-	"pokemon_released": "Releasing {pokemon_name} from {owner_name}.",
+	"pokemon_not_in_pokedex": "No Pokemon named '{pokemon_name}' in {owner_name}'s Pokedex.",
+	"pokemon_releasing": "Releasing {pokemon_name} from {owner_name}.",
 	"goodbye_message": "Goodbye!",
 	"keyboard_interrupt": "\nGoodbye!"
 }
