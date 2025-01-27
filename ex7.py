@@ -499,7 +499,7 @@ def resolve_menu(menu_map, title_key, owner_node=None):
 			if "{owner_name}" in title and owner_node:
 				title=title.format(owner_name=owner_node['owner'])
 			title = generate_output("subsection_title", title=title)
-		print(title)
+		print(title.strip())
 	while True:
 		execute_action(menu_map, owner_node)
 
