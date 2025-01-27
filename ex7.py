@@ -476,7 +476,8 @@ def display_menu(menu_map):
 	else:
 		options = "\n".join([f"{k}. {v[0]}" for k, v in menu_map.items()])
 	print(options)
-	choice = input(PROMPT['choice'] + " ").strip()
+	choice = input(PROMPT['choice'] + " ")
+	# choice = input(PROMPT['choice'] + " ").strip()
 	if choice in menu_map:
 		return choice
 	else:
