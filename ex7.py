@@ -365,18 +365,19 @@ def gather_all_owners(root, arr):
 def display_owners_sorted():
 	if not owner_root:
 		print("No owners at all.")
-		return
+		return resolve_menu(MAIN, 'main')
 	sorted_owners = []
 	gather_all_owners(owner_root, sorted_owners)
 	if not sorted_owners:
 		print("No owners at all.")
-		return
+		return resolve_menu(MAIN, 'main')
 	sorted_owners.sort(key=lambda x: len(x['pokedex']))
 	print(generate_output("section_title", title=TITLE['ownersort_pokenum']))
 	for owner in sorted_owners:
 		print(generate_output("owner_by_pokemon",
 			owner_name=owner['owner'],
 			pokemon_count=len(owner['pokedex'])))
+	resolve_menu(MAIN, 'main')
 
 
 def print_all_owners():
