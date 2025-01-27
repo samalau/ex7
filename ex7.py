@@ -455,9 +455,7 @@ def resolve_menu(menu_map, title_key, owner_node=None):
 		owner_node = None
 	if title_key in TITLE:
 		title = TITLE[title_key]
-		if title_key == 'pokedex':
-			title = generate_output("subsection_title", title=title.format(owner_name=owner_node['owner']))
-		elif title_key in ['main', 'ownersort_pokenum']:
+		if title_key in ['main', 'ownersort_pokenum']:
 			title = generate_output("section_title", title=title)
 		elif title_key in ['pokedex', 'filter']:
 			if "{owner_name}" in title and owner_node:
@@ -466,8 +464,6 @@ def resolve_menu(menu_map, title_key, owner_node=None):
 		print(title)
 	while True:
 		execute_action(menu_map, owner_node)
-		# if menu_map == TRAVERSAL:
-		# 	resolve_menu(MAIN, 'main')
 
 
 MAIN = {
