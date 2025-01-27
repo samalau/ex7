@@ -375,14 +375,12 @@ def display_owners_sorted():
 def print_all_owners():
 	if not owner_root:
 		print("No owners at all.")
-		return;
-	resolve_menu(TRAVERSAL, 'traversal')
+		return
 	sorted_owners = []
 	gather_all_owners(owner_root, sorted_owners)
-	for owner in sorted_owners:
-		print(generate_output("owner_info", owner_name=owner['owner']))
-		for pokemon in owner['pokedex']:
-			print(generate_output("pokemon_info", **pokemon))
+	if sorted_owners:
+		resolve_menu(TRAVERSAL, 'traversal')
+	print("No owners at all.")
 
 
 def display_all_pokemon(owner_node):
@@ -415,6 +413,9 @@ def execute_action(menu_map, title, owner_node=None):
 				action(owner_node)
 			else:
 				action()
+		if menu_map == TRAVERSAL:
+			menu_map = MAIN
+			return
 
 
 def generate_output(template_key, **kwargs):
