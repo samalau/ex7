@@ -28,7 +28,7 @@ def load_global_pokemon_data(filename):
 		print(f"{e}\n")
 
 
-global_pokemon_data = load_global_pokemon_data("globalpoke.csv")
+global_pokemon_data = load_global_pokemon_data("hoenn_pokedex.csv")
 
 owner_root = None
 
