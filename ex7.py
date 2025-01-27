@@ -127,7 +127,7 @@ def evolve_pokemon_by_name(owner_node):
 			old_pokemon_id = pokemon['ID']
 			new_pokemon_data = next((p for p in global_pokemon_data if p['ID'] == old_pokemon_id + 1), None)
 			if not new_pokemon_data:
-				print("Next evolution data not found.")  # TODO WORDING
+				# print("Next evolution data not found.")  # TODO WORDING
 				return
 			new_pokemon_name = new_pokemon_data['Name']
 			new_pokemon_id = new_pokemon_data['ID']
@@ -242,7 +242,6 @@ def filter_pokemon_by_type(owner_node):
 	try:
 		if any(p for p in owner_node['pokedex']):
 			pokemon_type = prompt_user('certain_poketype').lower()
-			# TODO HANDLE IF NO POKEMON IN POKEDEX
 			if any(p['Type'].lower() == pokemon_type.lower() for p in owner_node['pokedex']):
 				for pokemon in owner_node['pokedex']:
 					if pokemon['Type'].lower() == pokemon_type:
@@ -426,10 +425,8 @@ def execute_action(menu_map, owner_node=None):
 			print("Invalid choice.")
 			if menu_map in [MAIN, TRAVERSAL] or not owner_node:
 				return resolve_menu(MAIN, 'main')
-			elif menu_map == PERSONAL:
+			elif menu_map in [PERSONAL, FILTER]:
 				return resolve_menu(PERSONAL, 'pokedex', owner_node=owner_node)
-			elif menu_map == FILTER:
-				return resolve_menu(FILTER, 'main')
 			else:
 				return resolve_menu(MAIN, 'main')
 		action_label, action = menu_map[choice]
