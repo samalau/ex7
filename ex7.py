@@ -102,8 +102,8 @@ def release_pokemon_by_name(owner_node):
 	pokemon_name = prompt_user('pokename_release')
 	for pokemon in owner_node['pokedex']:
 		if pokemon['Name'].lower() == pokemon_name.lower():
+			print(generate_output("pokemon_releasing", pokemon_name=pokemon['Name'], owner_name=owner_node['owner']))
 			owner_node['pokedex'].remove(pokemon)
-			print(generate_output("pokemon_releasing", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
 			return resolve_menu(PERSONAL, 'pokedex', owner_node)
 	print(generate_output("pokemon_not_in_pokedex", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
 	return resolve_menu(PERSONAL, 'pokedex', owner_node)
