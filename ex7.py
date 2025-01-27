@@ -313,7 +313,7 @@ def filter_pokemon_by_hp(owner_node):
 	try:
 		if any(p for p in owner_node['pokedex']):
 			try:
-				user_input = float(prompt_user('attack_threshold'))
+				user_input = float(prompt_user('hp_threshold'))
 				try:
 					if user_input != int(user_input):
 						raise ValueError
@@ -346,7 +346,7 @@ def filter_pokemon_by_name(owner_node):
 		if any(p['Name'].lower().startswith(start_letter) for p in owner_node['pokedex']):
 			for pokemon in owner_node['pokedex']:
 				if pokemon['Name'].lower().startswith(start_letter):
-					print(f"Name: {pokemon['Name']}")
+					print(generate_output("pokemon_info", **pokemon))
 		else:
 			raise Exception
 	except Exception:
