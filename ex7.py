@@ -432,7 +432,6 @@ def execute_action(menu_map, owner_node=None):
 	while True:
 		choice = display_menu(menu_map)
 		if not choice:
-			print("Invalid choice.")
 			if menu_map in [MAIN, TRAVERSAL] or not owner_node:
 				return resolve_menu(MAIN, 'main')
 			elif menu_map == PERSONAL:
@@ -479,6 +478,11 @@ def display_menu(menu_map):
 	if choice in menu_map:
 		return choice
 	else:
+		try:
+			int(choice)
+			print("Invalid choice.")
+		except ValueError:
+			print("Invalid input.")
 		return None
 
 
