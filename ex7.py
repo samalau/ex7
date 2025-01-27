@@ -409,10 +409,13 @@ def existing_pokedex():
 
 def execute_action(menu_map, title, owner_node=None):
 	while True:
-		if not title or menu_map == TRAVERSAL:
-			choice = display_menu({k: v[0] for k, v in menu_map.items()})
+		if menu_map == TRAVERSAL:
+			choice = display_menu(menu_map)
 		else:
-			choice = display_menu({k: v[0] for k, v in menu_map.items()}, title)
+			if not title:
+				choice = display_menu({k: v[0] for k, v in menu_map.items()})
+			else:
+				choice = display_menu({k: v[0] for k, v in menu_map.items()}, title)
 		action_label, action = menu_map[choice]
 		if callable(action):
 			from inspect import signature
@@ -442,8 +445,10 @@ def display_menu(menu_map, title=None):
 			else None
 		)
 		print(generate_output(title_style, title=title) if title_style else title)
-	if menu_map == TRAVERSAL or menu_map == STARTER_POKE:
+	if menu_map == STARTER_POKE:
 		options = "\n".join([f"{k}) {v}" for k, v in menu_map.items()])
+	elif menu_map == TRAVERSAL:
+		options = "\n".join([f"{k}) {v[0]}" for k, v in menu_map.items()])
 	else:
 		options = "\n".join([f"{k}. {v}" for k, v in menu_map.items()])
 	print(options)
