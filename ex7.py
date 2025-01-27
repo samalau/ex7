@@ -418,7 +418,7 @@ def execute_action(menu_map, title, owner_node=None):
 				action(owner_node)
 			else:
 				action()
-		if menu_map is TRAVERSAL:
+		if menu_map == TRAVERSAL:
 			return
 
 
@@ -439,7 +439,7 @@ def display_menu(menu_map, title=None):
 			else None
 		)
 		print(generate_output(title_style, title=title) if title_style else title)
-	if menu_map is TRAVERSAL or menu_map is STARTER_POKE:
+	if menu_map == TRAVERSAL or menu_map == STARTER_POKE:
 		options = "\n".join([f"{k}) {v}" for k, v in menu_map.items()])
 	else:
 		options = "\n".join([f"{k}. {v}" for k, v in menu_map.items()])
@@ -452,7 +452,7 @@ def display_menu(menu_map, title=None):
 
 
 def resolve_menu(menu_map, title_key, owner_node=None):
-	if menu_map is MAIN or menu_map is TRAVERSAL:
+	if menu_map == MAIN or menu_map == TRAVERSAL:
 		owner_node = None
 	if title_key in TITLE:
 		title = TITLE[title_key]
@@ -461,7 +461,7 @@ def resolve_menu(menu_map, title_key, owner_node=None):
 	else:
 		title = None
 	execute_action(menu_map, title, owner_node)
-	if menu_map is TRAVERSAL:
+	if menu_map == TRAVERSAL:
 		resolve_menu(MAIN, 'main')
 
 
