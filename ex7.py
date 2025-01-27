@@ -413,9 +413,12 @@ def print_all_owners():
 def display_all_pokemon(owner_node):
 	if not owner_node:
 		return resolve_menu(MAIN, 'main')
-	for pokemon in owner_node['pokedex']:
-		print(generate_output("pokemon_info", **pokemon))
-		return resolve_menu(FILTER, 'filter', owner_node)
+	if any(p for p in owner_node['pokedex']):
+		for pokemon in owner_node['pokedex']:
+			print(generate_output("pokemon_info", **pokemon))
+	else:
+		print(generate_output("pokemon_no_criteria_match"))
+	return resolve_menu(FILTER, 'filter', owner_node)
 
 
 def existing_pokedex():
