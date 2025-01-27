@@ -46,7 +46,8 @@ def new_pokedex():
 	try:
 		if any(owner['owner'].lower() == owner_name.lower() for owner in sorted_owners):
 			raise ValueError
-		starter_choice = display_menu(STARTER_POKE, PROMPT['starter_pokechoice'])
+		print(PROMPT['starter_pokechoice'])
+		starter_choice = display_menu(STARTER_POKE)
 		starter_pokechoice = STARTER_POKE.get(starter_choice)
 		if not starter_pokechoice:
 			print("Invalid starter Pokémon.")  # TODO WORDING
@@ -386,7 +387,6 @@ def print_all_owners():
 	gather_all_owners(owner_root, sorted_owners)
 	if sorted_owners:
 		resolve_menu(TRAVERSAL, 'traversal')
-		return
 	else:
 		print("No owners at all.")
 
@@ -407,16 +407,14 @@ def existing_pokedex():
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
 
 
-def execute_action(menu_map, title, owner_node=None):
+def execute_action(menu_map, owner_node=None):
 	while True:
-		if menu_map == TRAVERSAL:
-			choice = display_menu(menu_map)
-		else:
-			if not title:
-				choice = display_menu({k: v[0] for k, v in menu_map.items()})
-			else:
-				choice = display_menu({k: v[0] for k, v in menu_map.items()}, title)
+		choice = display_menu(menu_map)
 		action_label, action = menu_map[choice]
+		if menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]:
+			print("Back to Main Menu.")
+		if menu_map == FILTER and choice == list(FILTER.keys())[-1]:
+			print("Back to Pokedex Menu.")
 		if callable(action):
 			from inspect import signature
 			action_args = signature(action).parameters
@@ -425,7 +423,7 @@ def execute_action(menu_map, title, owner_node=None):
 			else:
 				action()
 		if menu_map == TRAVERSAL:
-			return
+			return resolve_menu(MAIN, 'main')
 
 
 def generate_output(template_key, **kwargs):
@@ -437,44 +435,39 @@ def prompt_user(prompt_key):
 	return response
 
 
-def display_menu(menu_map, title=None):
-	if title:
-		title_style = (
-			"section_title" if title == TITLE.get('main')
-			else "subsection_title" if title in [TITLE.get("pokedex"), TITLE.get("filter")]
-			else None
-		)
-		print(generate_output(title_style, title=title) if title_style else title)
+def display_menu(menu_map):
 	if menu_map == STARTER_POKE:
 		options = "\n".join([f"{k}) {v}" for k, v in menu_map.items()])
 	elif menu_map == TRAVERSAL:
 		options = "\n".join([f"{k}) {v[0]}" for k, v in menu_map.items()])
 	else:
-		options = "\n".join([f"{k}. {v}" for k, v in menu_map.items()])
+		options = "\n".join([f"{k}. {v[0]}" for k, v in menu_map.items()])
 	print(options)
 	while True:
 		choice = input(PROMPT['choice'] + " ").strip()
 		if choice in menu_map:
-			if menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]:
-				print(generate_output("main_menu_return"))
-			if menu_map == FILTER and choice == list(FILTER.keys())[-1]:
-				print(generate_output("pokedex_home_return"))
 			return choice
 		print(f"Invalid input. Valid options: {', '.join(menu_map.keys())}")
 
 
 def resolve_menu(menu_map, title_key, owner_node=None):
-	if menu_map == MAIN or menu_map == TRAVERSAL:
+	if menu_map == MAIN:
 		owner_node = None
 	if title_key in TITLE:
 		title = TITLE[title_key]
-		if "{owner_name}" in title and owner_node:
-			title = title.format(owner_name=owner_node['owner'])
-	else:
-		title = None
-	execute_action(menu_map, title, owner_node)
-	if menu_map == TRAVERSAL:
-		resolve_menu(MAIN, 'main')
+		if title_key == 'pokedex':
+			title = generate_output("subsection_title", title=title.format(owner_name=owner_node['owner']))
+		elif title_key in ['main', 'ownersort_pokenum']:
+			title = generate_output("section_title", title=title)
+		elif title_key in ['pokedex', 'filter']:
+			if "{owner_name}" in title and owner_node:
+				title=title.format(owner_name=owner_node['owner'])
+			title = generate_output("subsection_title", title=title)
+		print(title)
+	while True:
+		execute_action(menu_map, owner_node)
+		# if menu_map == TRAVERSAL:
+		# 	resolve_menu(MAIN, 'main')
 
 
 MAIN = {
@@ -537,8 +530,6 @@ templates = {
 	"pokemon_invalid": "ID {pokemon_id} not found in Honen data.",
 	"owner_pokemon_not_found": "No Pokemon named '{pokemon_name}' in {owner_name}'s Pokedex.",
 	"pokemon_released": "Releasing {pokemon_name} from {owner_name}.",
-	"pokedex_home_return": "Back to Pokedex Menu.",
-	"main_menu_return": "Back to Main Menu.",
 	"goodbye_message": "Goodbye!",
 	"keyboard_interrupt": "\nGoodbye!"
 }
