@@ -48,7 +48,16 @@ def new_pokedex():
 		if any(owner['owner'].lower().strip() == owner_name.lower().strip() for owner in sorted_owners):
 			raise Exception
 		print(PROMPT['starter_pokechoice'])
-		starter_choice = display_menu(STARTER_POKE)
+		display_menu(STARTER_POKE)
+		check_choice = 'Invalid input'
+		while check_choice == 'Invalid input':
+			starter_choice = input(PROMPT['choice'] + " ").strip()
+		# choice = input(PROMPT['choice'] + " ")
+			check_choice = validate_choice(starter_choice, STARTER_POKE)
+			if not check_choice:
+				return resolve_menu(MAIN, 'main')
+			if check_choice != 'Invalid input':
+				starter_pokechoice = check_choice
 		starter_pokechoice = STARTER_POKE.get(starter_choice)
 		if starter_pokechoice:
 			starter_data = next((p for p in global_pokemon_data if p['Name'].lower().strip() == starter_pokechoice.lower().strip()), None)
@@ -450,16 +459,23 @@ def existing_pokedex():
 
 
 def execute_action(menu_map, owner_node=None):
-	choice = display_menu(menu_map)
-	if not choice:
-		if menu_map in [MAIN, TRAVERSAL] or not owner_node:
-			return resolve_menu(MAIN, 'main')
-		elif menu_map == PERSONAL:
-			return resolve_menu(PERSONAL, 'pokedex', owner_node=owner_node)
-		elif menu_map == FILTER:
-			return resolve_menu(FILTER, 'filter', owner_node)
-		else:
-			return resolve_menu(MAIN, 'main')
+	check_choice = 'Invalid input'
+	while check_choice == 'Invalid input':
+		display_menu(menu_map)
+		choice = input(PROMPT['choice'] + " ").strip()
+	# choice = input(PROMPT['choice'] + " ")
+		check_choice = validate_choice(choice, menu_map)
+		if not check_choice:
+			if menu_map in [MAIN, TRAVERSAL] or not owner_node:
+				return resolve_menu(MAIN, 'main')
+			elif menu_map == PERSONAL:
+				return resolve_menu(PERSONAL, 'pokedex', owner_node=owner_node)
+			elif menu_map == FILTER:
+				return resolve_menu(FILTER, 'filter', owner_node)
+			else:
+				return resolve_menu(MAIN, 'main')
+		if check_choice != 'Invalid input':
+			choice = check_choice
 	action_label, action = menu_map[choice]
 	if menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]:
 		print("Back to Main Menu.")
@@ -493,17 +509,19 @@ def display_menu(menu_map):
 	else:
 		options = "\n".join([f"{k}. {v[0]}" for k, v in menu_map.items()])
 	print(options)
-	choice = input(PROMPT['choice'] + " ").strip()
-	# choice = input(PROMPT['choice'] + " ")
+
+
+def validate_choice(choice, menu_map):
 	if choice in menu_map:
 		return choice
 	else:
 		try:
 			int(choice)
 			print("Invalid choice.")
+			return None
 		except ValueError:
 			print("Invalid input.")
-		return None
+			return 'Invalid input.'
 
 
 def resolve_menu(menu_map, title_key, owner_node=None):
@@ -518,7 +536,6 @@ def resolve_menu(menu_map, title_key, owner_node=None):
 				title=title.format(owner_name=owner_node['owner'])
 			title = generate_output("subsection_title", title=title)
 		print(title.strip())
-	# while True:
 	execute_action(menu_map, owner_node)
 
 
