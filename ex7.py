@@ -462,12 +462,29 @@ def execute_action(menu_map, owner_node=None):
 	if menu_map == FILTER and choice == list(FILTER.keys())[-1]:
 		print("Back to Pokedex Menu.")
 	if callable(action):
-		from inspect import signature
-		action_args = signature(action).parameters
-		if owner_node and len(action_args) > 0:
-			action(owner_node)
-		else:
-			action()
+		try:
+			code = getattr(action, "__code__", None)
+			if code:
+				num_positional_args = code.co_argcount
+				num_defaults = len(getattr(action, "__defaults__", []) or [])
+				required_args = num_positional_args - num_defaults
+				if owner_node and required_args > 0:
+					action(owner_node)
+				else:
+					action()
+			else:
+				try:
+					action(owner_node)
+				except TypeError:
+					action()
+		except TypeError:
+			if owner_node:
+				try:
+					action(owner_node)
+				except TypeError:
+					action()
+			else:
+				action()
 	if menu_map == TRAVERSAL:
 		return resolve_menu(MAIN, 'main')
 
