@@ -408,6 +408,7 @@ def print_all_owners():
 	sorted_owners = []
 	gather_all_owners(owner_root, sorted_owners)
 	if sorted_owners:
+		print('\n')
 		return resolve_menu(TRAVERSAL, 'traversal')
 	else:
 		print("No owners at all.")
@@ -427,12 +428,13 @@ def display_all_pokemon(owner_node):
 
 def existing_pokedex():
 	global owner_node
-	owner_name = prompt_user('owner_name').strip()
+	owner_name = prompt_user('owner_name')
 	if not owner_root:
 		print("No owners at all.")
 		return resolve_menu(MAIN, 'main')
 	owner_node = find_owner_bst(owner_root, owner_name)
 	if owner_node:
+		print('\n')
 		return resolve_menu(PERSONAL, 'pokedex', owner_node)
 	else:
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
@@ -443,7 +445,7 @@ def execute_action(menu_map, owner_node=None):
 	display_menu(menu_map)
 	check_choice = 'Invalid input.'
 	while check_choice == 'Invalid input.':
-		choice = input(PROMPT['choice'] + " ").strip()
+		choice = input(PROMPT['choice'] + " ")
 		check_choice = validate_choice(choice, menu_map)
 		if not check_choice:
 			if menu_map in [MAIN, TRAVERSAL] or not owner_node:
