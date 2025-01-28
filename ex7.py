@@ -49,14 +49,14 @@ def new_pokedex():
 			raise Exception
 		print(PROMPT['starter_pokechoice'])
 		display_menu(STARTER_POKE)
-		check_choice = 'Invalid input'
-		while check_choice == 'Invalid input':
+		check_choice = 'Invalid input.'
+		while check_choice == 'Invalid input.':
 			starter_choice = input(PROMPT['choice'] + " ").strip()
 		# choice = input(PROMPT['choice'] + " ")
 			check_choice = validate_choice(starter_choice, STARTER_POKE)
 			if not check_choice:
 				return resolve_menu(MAIN, 'main')
-			if check_choice != 'Invalid input':
+			if check_choice != 'Invalid input.':
 				starter_pokechoice = check_choice
 		starter_pokechoice = STARTER_POKE.get(starter_choice)
 		if starter_pokechoice:
@@ -459,8 +459,8 @@ def existing_pokedex():
 
 
 def execute_action(menu_map, owner_node=None):
-	check_choice = 'Invalid input'
-	while check_choice == 'Invalid input':
+	check_choice = 'Invalid input.'
+	while check_choice == 'Invalid input.':
 		display_menu(menu_map)
 		choice = input(PROMPT['choice'] + " ").strip()
 	# choice = input(PROMPT['choice'] + " ")
@@ -474,7 +474,7 @@ def execute_action(menu_map, owner_node=None):
 				return resolve_menu(FILTER, 'filter', owner_node)
 			else:
 				return resolve_menu(MAIN, 'main')
-		if check_choice != 'Invalid input':
+		if check_choice != 'Invalid input.':
 			choice = check_choice
 	action_label, action = menu_map[choice]
 	if menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]:
