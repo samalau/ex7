@@ -418,6 +418,7 @@ def display_all_pokemon(owner_node):
 
 
 def existing_pokedex():
+	global owner_node
 	owner_name = prompt_user('owner_name').strip()
 	if not owner_root:
 		print("No owners at all.")
