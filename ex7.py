@@ -65,9 +65,9 @@ def new_pokedex():
 				new_owner = create_owner_node(owner_name, starter_data)
 				owner_root = insert_owner_bst(owner_root, new_owner)
 				print(generate_output("pokemon_created", owner_name=owner_name, starter_pokechoice=starter_pokechoice))
+				return resolve_menu(MAIN, 'main')
 	except Exception:
 		print(generate_output("pokedex_already_exists", owner_name=owner_name))
-	finally:
 		return resolve_menu(MAIN, 'main')
 
 
@@ -125,7 +125,7 @@ def evolve_pokemon_by_name(owner_node):
 		pass
 	else:
 		print(generate_output("pokemon_not_in_pokedex", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
-		return
+		return resolve_menu(PERSONAL, 'pokedex', owner_node)
 	for pokemon in owner_node['pokedex']:
 		if pokemon['Name'].lower().strip() == pokemon_name.lower().strip() and pokemon['Can Evolve'] == 'TRUE':
 			old_pokemon_name = pokemon['Name']
