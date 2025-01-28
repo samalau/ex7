@@ -433,7 +433,6 @@ def existing_pokedex():
 		return resolve_menu(MAIN, 'main')
 	owner_node = find_owner_bst(owner_root, owner_name)
 	if owner_node:
-		print('\n')
 		return resolve_menu(PERSONAL, 'pokedex', owner_node)
 	else:
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
@@ -461,9 +460,9 @@ def execute_action(menu_map, title=None, owner_node=None):
 			choice = check_choice
 	action_label, action = menu_map[choice]
 
-	if (menu_map == PERSONAL and PERSONAL[choice][0] == 'Display Pokedex'
-	) or (owner_root and menu_map == TRAVERSAL
-	): print('\n')
+	# if (menu_map == PERSONAL and PERSONAL[choice][0] == 'Display Pokedex'
+	# ) or (owner_root and menu_map == TRAVERSAL
+	# ): print('\n')
 
 	if (menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]):
 		print("Back to Main Menu.")
@@ -487,7 +486,8 @@ def generate_output(template_key, **kwargs):
 
 
 def prompt_user(prompt_key):
-	response = input(PROMPT[prompt_key] + " ").strip()
+	response = input(PROMPT[prompt_key] + " ")
+	# response = input(PROMPT[prompt_key] + " ").strip()
 	return response
 
 
