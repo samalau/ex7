@@ -65,9 +65,9 @@ def new_pokedex():
 def insert_owner_bst(root, new_node):
 	if root is None:
 		return new_node
-	if new_node['owner'] < root['owner']:
+	if new_node['owner'].strip().lower() < root['owner'].strip().lower():
 		root['left'] = insert_owner_bst(root['left'], new_node)
-	else:
+	elif new_node['owner'].strip().lower() > root['owner'].strip().lower():
 		root['right'] = insert_owner_bst(root['right'], new_node)
 	return root
 
@@ -357,7 +357,7 @@ def find_owner_bst(root, owner_name):
 		return root
 	elif owner_name.lower().strip() < root['owner'].lower().strip():
 		return find_owner_bst(root.get('left'), owner_name)
-	else:
+	elif owner_name.lower().strip() > root['owner'].lower().strip():
 		return find_owner_bst(root.get('right'), owner_name)
 
 
@@ -417,16 +417,34 @@ def display_all_pokemon(owner_node):
 	return resolve_menu(FILTER, 'filter', owner_node)
 
 
+# # FOR DEBUG
+# def print_tree(root, level=0):
+#     if root is not None:
+#         print_tree(root.get('right'), level + 1)
+#         print(' ' * 4 * level + f"-> {root['owner']}")
+#         print_tree(root.get('left'), level + 1)
+
 def existing_pokedex():
+	
 	global owner_node
+	# print(F"OWNERNODE 0 = {owner_node}")
 	owner_name = prompt_user('owner_name').strip()
+	# print(F"OWNERnaaame 0 = {owner_name}")
+	# print(F"OWNERNODE 1 = {owner_node}")
+	# print(F"OWNERNODE 2 = {owner_node}")
+	# print_tree(owner_root)
 	if not owner_root:
 		print("No owners at all.")
 		return resolve_menu(MAIN, 'main')
+	# print_tree(owner_root)
+	# print(F"OWNERNODE 3 = {owner_node}")
 	owner_node = find_owner_bst(owner_root, owner_name)
+	# print(F"OWNERNODE 4 = {owner_node}")
+	# print_tree(owner_root)
 	if owner_node:
 		return resolve_menu(PERSONAL, 'pokedex', owner_node)
 	else:
+		# print(F"OWNERNODE 5 = {owner_node}")
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
 		return resolve_menu(MAIN, 'main')
 
