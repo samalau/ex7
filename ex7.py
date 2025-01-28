@@ -50,13 +50,9 @@ def new_pokedex():
 		print(PROMPT['starter_pokechoice'])
 		starter_choice = display_menu(STARTER_POKE)
 		starter_pokechoice = STARTER_POKE.get(starter_choice)
-		if not starter_pokechoice:
-			print("Invalid choice.")
-		else:
+		if starter_pokechoice:
 			starter_data = next((p for p in global_pokemon_data if p['Name'] == starter_pokechoice), None)
-			if not starter_data:
-				print("Invalid choice.")
-			else:
+			if starter_data:
 				new_owner = create_owner_node(owner_name, starter_data)
 				owner_root = insert_owner_bst(owner_root, new_owner)
 				print(generate_output("pokemon_created", owner_name=owner_name, starter_pokechoice=starter_pokechoice))
