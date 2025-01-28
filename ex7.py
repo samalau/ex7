@@ -435,7 +435,6 @@ def existing_pokedex():
 	if owner_node:
 		return resolve_menu(PERSONAL, 'pokedex', owner_node)
 	else:
-		print("\033[F", end="")
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
 		return resolve_menu(MAIN, 'main')
 
