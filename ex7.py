@@ -408,7 +408,6 @@ def print_all_owners():
 	sorted_owners = []
 	gather_all_owners(owner_root, sorted_owners)
 	if sorted_owners:
-		print('\n')
 		return resolve_menu(TRAVERSAL, 'traversal')
 	else:
 		print("No owners at all.")
@@ -434,7 +433,6 @@ def existing_pokedex():
 		return resolve_menu(MAIN, 'main')
 	owner_node = find_owner_bst(owner_root, owner_name)
 	if owner_node:
-		print('\n')
 		return resolve_menu(PERSONAL, 'pokedex', owner_node)
 	else:
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
@@ -459,10 +457,17 @@ def execute_action(menu_map, owner_node=None):
 		if check_choice != 'Invalid input.':
 			choice = check_choice
 	action_label, action = menu_map[choice]
-	if menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]:
+
+	if (menu_map == PERSONAL and PERSONAL[choice][0] == 'Display Pokedex'
+	) or (menu_map == MAIN and MAIN[choice][0] == 'Existing Pokedex'
+	) or (menu_map == TRAVERSAL
+	): print('\n')
+
+	if (menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]):
 		print("Back to Main Menu.")
 	if menu_map == FILTER and choice == list(FILTER.keys())[-1]:
 		print("Back to Pokedex Menu.")
+	
 	if callable(action):
 		from inspect import signature
 		action_args = signature(action).parameters
@@ -470,6 +475,7 @@ def execute_action(menu_map, owner_node=None):
 			action(owner_node)
 		else:
 			action()
+	
 	if menu_map == TRAVERSAL:
 		return resolve_menu(MAIN, 'main')
 
