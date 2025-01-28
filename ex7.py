@@ -27,7 +27,7 @@ def load_global_pokemon_data(filename):
 					continue
 		return data_list
 	except Exception as e:
-		print(f"ERROR: {e}\n")
+		print(f"ERROR: {e}")
 
 global_pokemon_data = load_global_pokemon_data("hoenn_pokedex.csv")
 
@@ -43,7 +43,7 @@ def new_pokedex():
 	global owner_root
 	sorted_owners = []
 	gather_all_owners(owner_root, sorted_owners)
-	owner_name = prompt_user('owner_name')
+	owner_name = prompt_user('owner_name').strip()
 	try:
 		if any(owner['owner'].lower().strip() == owner_name.lower().strip() for owner in sorted_owners):
 			raise Exception
@@ -52,7 +52,6 @@ def new_pokedex():
 		check_choice = 'Invalid input.'
 		while check_choice == 'Invalid input.':
 			starter_choice = input(PROMPT['choice'] + " ").strip()
-		# choice = input(PROMPT['choice'] + " ")
 			check_choice = validate_choice(starter_choice, STARTER_POKE)
 			if not check_choice:
 				return resolve_menu(MAIN, 'main')
@@ -428,24 +427,14 @@ def display_all_pokemon(owner_node):
 
 def existing_pokedex():
 	global owner_node
-	# print(F"OWNERNODE 0 = {owner_node}")  # FOR DA BUGZ
 	owner_name = prompt_user('owner_name').strip()
-	# print(F"OWNERnaaame 0 = {owner_name}")
-	# print(F"OWNERNODE 1 = {owner_node}")
-	# print(F"OWNERNODE 2 = {owner_node}")
-	# print_tree(owner_root)
 	if not owner_root:
 		print("No owners at all.")
 		return resolve_menu(MAIN, 'main')
-	# print_tree(owner_root)
-	# print(F"OWNERNODE 3 = {owner_node}")
 	owner_node = find_owner_bst(owner_root, owner_name)
-	# print(F"OWNERNODE 4 = {owner_node}")
-	# print_tree(owner_root)
 	if owner_node:
 		return resolve_menu(PERSONAL, 'pokedex', owner_node)
 	else:
-		# print(F"OWNERNODE 5 = {owner_node}")
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
 		return resolve_menu(MAIN, 'main')
 
@@ -455,7 +444,6 @@ def execute_action(menu_map, owner_node=None):
 	check_choice = 'Invalid input.'
 	while check_choice == 'Invalid input.':
 		choice = input(PROMPT['choice'] + " ").strip()
-	# choice = input(PROMPT['choice'] + " ")
 		check_choice = validate_choice(choice, menu_map)
 		if not check_choice:
 			if menu_map in [MAIN, TRAVERSAL] or not owner_node:
