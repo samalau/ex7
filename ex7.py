@@ -83,7 +83,7 @@ def create_owner_node(owner_name, first_pokemon=None):
 
 def delete_pokedex():
 	global owner_root
-	owner_name = prompt_user('owner_delete')
+	owner_name = prompt_user('owner_delete').strip()
 	if not find_owner_bst(owner_root, owner_name):
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
 		return resolve_menu(MAIN, 'main')
@@ -356,9 +356,9 @@ def find_owner_bst(root, owner_name):
 	if owner_name.lower() == root['owner'].lower():
 		return root
 	elif owner_name.lower() < root['owner'].lower():
-		return find_owner_bst(root['left'], owner_name)
+		return find_owner_bst(root.get('left'), owner_name)
 	else:
-		return find_owner_bst(root['right'], owner_name)
+		return find_owner_bst(root.get('right'), owner_name)
 
 
 def find_min_node(node):
@@ -419,7 +419,10 @@ def display_all_pokemon(owner_node):
 
 def existing_pokedex():
 	global owner_node
-	owner_name = prompt_user('owner_name')
+	owner_name = prompt_user('owner_name').strip()
+	if not owner_root:
+		print("No owners at all.")
+		return resolve_menu(MAIN, 'main')
 	owner_node = find_owner_bst(owner_root, owner_name)
 	if owner_node:
 		return resolve_menu(PERSONAL, 'pokedex', owner_node)
