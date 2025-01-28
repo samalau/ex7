@@ -427,7 +427,7 @@ def display_all_pokemon(owner_node):
 
 def existing_pokedex():
 	global owner_node
-	owner_name = prompt_user('owner_name')
+	owner_name = prompt_user('owner_name').strip()
 	if not owner_root:
 		print("No owners at all.")
 		return resolve_menu(MAIN, 'main')
@@ -439,13 +439,11 @@ def existing_pokedex():
 		return resolve_menu(MAIN, 'main')
 
 
-def execute_action(menu_map, title=None, owner_node=None):
-	if title:
-		print(title)
+def execute_action(menu_map, owner_node=None):
 	display_menu(menu_map)
 	check_choice = 'Invalid input.'
 	while check_choice == 'Invalid input.':
-		choice = input(PROMPT['choice'] + " ")
+		choice = input(PROMPT['choice'] + " ").strip()
 		check_choice = validate_choice(choice, menu_map)
 		if not check_choice:
 			if menu_map in [MAIN, TRAVERSAL] or not owner_node:
@@ -459,16 +457,10 @@ def execute_action(menu_map, title=None, owner_node=None):
 		if check_choice != 'Invalid input.':
 			choice = check_choice
 	action_label, action = menu_map[choice]
-
-	# if (menu_map == PERSONAL and PERSONAL[choice][0] == 'Display Pokedex'
-	# ) or (owner_root and menu_map == TRAVERSAL
-	# ): print('\n')
-
-	if (menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]):
+	if menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]:
 		print("Back to Main Menu.")
 	if menu_map == FILTER and choice == list(FILTER.keys())[-1]:
 		print("Back to Pokedex Menu.")
-	
 	if callable(action):
 		from inspect import signature
 		action_args = signature(action).parameters
@@ -476,7 +468,6 @@ def execute_action(menu_map, title=None, owner_node=None):
 			action(owner_node)
 		else:
 			action()
-	
 	if menu_map == TRAVERSAL:
 		return resolve_menu(MAIN, 'main')
 
@@ -486,8 +477,7 @@ def generate_output(template_key, **kwargs):
 
 
 def prompt_user(prompt_key):
-	response = input(PROMPT[prompt_key] + " ")
-	# response = input(PROMPT[prompt_key] + " ").strip()
+	response = input(PROMPT[prompt_key] + " ").strip()
 	return response
 
 
@@ -525,7 +515,8 @@ def resolve_menu(menu_map, title_key, owner_node=None):
 			if "{owner_name}" in title and owner_node:
 				title=title.format(owner_name=owner_node['owner'])
 			title = generate_output("subsection_title", title=title)
-	execute_action(menu_map, title, owner_node)
+		print(title.strip())
+	execute_action(menu_map, owner_node)
 
 
 MAIN = {
