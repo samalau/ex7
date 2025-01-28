@@ -426,17 +426,9 @@ def display_all_pokemon(owner_node):
 	return resolve_menu(FILTER, 'filter', owner_node)
 
 
-# # FOR DEBUG
-# def print_tree(root, level=0):
-#     if root is not None:
-#         print_tree(root.get('right'), level + 1)
-#         print(' ' * 4 * level + f"-> {root['owner']}")
-#         print_tree(root.get('left'), level + 1)
-
 def existing_pokedex():
-	
 	global owner_node
-	# print(F"OWNERNODE 0 = {owner_node}")
+	# print(F"OWNERNODE 0 = {owner_node}")  # FOR DA BUGZ
 	owner_name = prompt_user('owner_name').strip()
 	# print(F"OWNERnaaame 0 = {owner_name}")
 	# print(F"OWNERNODE 1 = {owner_node}")
@@ -459,9 +451,9 @@ def existing_pokedex():
 
 
 def execute_action(menu_map, owner_node=None):
+	display_menu(menu_map)
 	check_choice = 'Invalid input.'
 	while check_choice == 'Invalid input.':
-		display_menu(menu_map)
 		choice = input(PROMPT['choice'] + " ").strip()
 	# choice = input(PROMPT['choice'] + " ")
 		check_choice = validate_choice(choice, menu_map)
