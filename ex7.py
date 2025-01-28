@@ -45,13 +45,13 @@ def new_pokedex():
 	gather_all_owners(owner_root, sorted_owners)
 	owner_name = prompt_user('owner_name')
 	try:
-		if any(owner['owner'].lower() == owner_name.lower() for owner in sorted_owners):
+		if any(owner['owner'].lower().strip() == owner_name.lower().strip() for owner in sorted_owners):
 			raise Exception
 		print(PROMPT['starter_pokechoice'])
 		starter_choice = display_menu(STARTER_POKE)
 		starter_pokechoice = STARTER_POKE.get(starter_choice)
 		if starter_pokechoice:
-			starter_data = next((p for p in global_pokemon_data if p['Name'] == starter_pokechoice), None)
+			starter_data = next((p for p in global_pokemon_data if p['Name'].lower().strip() == starter_pokechoice.lower().strip()), None)
 			if starter_data:
 				new_owner = create_owner_node(owner_name, starter_data)
 				owner_root = insert_owner_bst(owner_root, new_owner)
@@ -97,7 +97,7 @@ def release_pokemon_by_name(owner_node):
 		return resolve_menu(MAIN, 'main')
 	pokemon_name = prompt_user('pokename_release')
 	for pokemon in owner_node['pokedex']:
-		if pokemon['Name'].lower() == pokemon_name.lower():
+		if pokemon['Name'].lower().strip() == pokemon_name.lower().strip():
 			print(generate_output("pokemon_releasing", pokemon_name=pokemon['Name'], owner_name=owner_node['owner']))
 			owner_node['pokedex'].remove(pokemon)
 			return resolve_menu(PERSONAL, 'pokedex', owner_node)
@@ -112,13 +112,13 @@ def evolve_pokemon_by_name(owner_node):
 	new_pokemon_data = None
 	old_pokemon_name = None
 	old_pokemon_id = None
-	if any(p['Name'].lower() == pokemon_name.lower() for p in owner_node['pokedex']):
+	if any(p['Name'].lower().strip() == pokemon_name.lower().strip() for p in owner_node['pokedex']):
 		pass
 	else:
 		print(generate_output("pokemon_not_in_pokedex", pokemon_name=pokemon_name, owner_name=owner_node['owner']))
 		return
 	for pokemon in owner_node['pokedex']:
-		if pokemon['Name'].lower() == pokemon_name.lower() and pokemon['Can Evolve'] == 'TRUE':
+		if pokemon['Name'].lower().strip() == pokemon_name.lower().strip() and pokemon['Can Evolve'] == 'TRUE':
 			old_pokemon_name = pokemon['Name']
 			old_pokemon_id = pokemon['ID']
 			new_pokemon_data = next((p for p in global_pokemon_data if p['ID'] == old_pokemon_id + 1), None)
@@ -150,7 +150,7 @@ def evolve_pokemon_by_name(owner_node):
 
 def add_pokemon_to_owner(owner_node):
 	try:
-		pokemon_id = prompt_user('pokename_add_id')
+		pokemon_id = prompt_user('pokename_add_id').strip()
 		try:
 			pokemon_id = int(pokemon_id)
 		except Exception:
@@ -243,10 +243,10 @@ def post_order_traversal(root):
 def filter_pokemon_by_type(owner_node):
 	try:
 		if any(p for p in owner_node['pokedex']):
-			pokemon_type = prompt_user('certain_poketype').lower()
-			if any(p['Type'].lower() == pokemon_type.lower() for p in owner_node['pokedex']):
+			pokemon_type = prompt_user('certain_poketype').lower().strip()
+			if any(p['Type'].lower().strip() == pokemon_type.lower().strip() for p in owner_node['pokedex']):
 				for pokemon in owner_node['pokedex']:
-					if pokemon['Type'].lower() == pokemon_type:
+					if pokemon['Type'].lower().strip() == pokemon_type:
 						print(generate_output("pokemon_info", **pokemon))
 			else:
 				raise Exception
@@ -279,7 +279,7 @@ def filter_pokemon_by_attack(owner_node):
 	try:
 		if any(p for p in owner_node['pokedex']):
 			try:
-				user_input = float(prompt_user('attack_threshold'))
+				user_input = float(prompt_user('attack_threshold').strip())
 				try:
 					if user_input != int(user_input):
 						raise ValueError
@@ -309,7 +309,7 @@ def filter_pokemon_by_hp(owner_node):
 	try:
 		if any(p for p in owner_node['pokedex']):
 			try:
-				user_input = float(prompt_user('hp_threshold'))
+				user_input = float(prompt_user('hp_threshold').strip())
 				try:
 					if user_input != int(user_input):
 						raise ValueError
@@ -338,9 +338,9 @@ def filter_pokemon_by_hp(owner_node):
 def filter_pokemon_by_name(owner_node):
 	try:
 		start_letter = prompt_user('pokename_starting_letters').lower()
-		if any(p['Name'].lower().startswith(start_letter) for p in owner_node['pokedex']):
+		if any(p['Name'].lower().strip().startswith(start_letter) for p in owner_node['pokedex']):
 			for pokemon in owner_node['pokedex']:
-				if pokemon['Name'].lower().startswith(start_letter):
+				if pokemon['Name'].lower().strip().startswith(start_letter):
 					print(generate_output("pokemon_info", **pokemon))
 		else:
 			raise Exception
@@ -353,9 +353,9 @@ def filter_pokemon_by_name(owner_node):
 def find_owner_bst(root, owner_name):
 	if root is None:
 		return None
-	if owner_name.lower() == root['owner'].lower():
+	if owner_name.lower().strip() == root['owner'].lower().strip():
 		return root
-	elif owner_name.lower() < root['owner'].lower():
+	elif owner_name.lower().strip() < root['owner'].lower().strip():
 		return find_owner_bst(root.get('left'), owner_name)
 	else:
 		return find_owner_bst(root.get('right'), owner_name)
@@ -475,8 +475,8 @@ def display_menu(menu_map):
 	else:
 		options = "\n".join([f"{k}. {v[0]}" for k, v in menu_map.items()])
 	print(options)
-	choice = input(PROMPT['choice'] + " ")
-	# choice = input(PROMPT['choice'] + " ").strip()
+	choice = input(PROMPT['choice'] + " ").strip()
+	# choice = input(PROMPT['choice'] + " ")
 	if choice in menu_map:
 		return choice
 	else:
@@ -500,8 +500,8 @@ def resolve_menu(menu_map, title_key, owner_node=None):
 				title=title.format(owner_name=owner_node['owner'])
 			title = generate_output("subsection_title", title=title)
 		print(title.strip())
-	while True:
-		execute_action(menu_map, owner_node)
+	# while True:
+	execute_action(menu_map, owner_node)
 
 
 MAIN = {
