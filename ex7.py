@@ -435,6 +435,7 @@ def existing_pokedex():
 	if owner_node:
 		return resolve_menu(PERSONAL, 'pokedex', owner_node)
 	else:
+		print("\033[F", end="")
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
 		return resolve_menu(MAIN, 'main')
 
@@ -459,7 +460,7 @@ def execute_action(menu_map, owner_node=None):
 	action_label, action = menu_map[choice]
 
 	if (menu_map == PERSONAL and PERSONAL[choice][0] == 'Display Pokedex'
-	) or (menu_map == MAIN and MAIN[choice][0] == 'Existing Pokedex'
+	) or (owner_node and menu_map == MAIN and MAIN[choice][0] == 'Existing Pokedex'
 	) or (menu_map == TRAVERSAL
 	): print('\n')
 
