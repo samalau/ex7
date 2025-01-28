@@ -433,13 +433,16 @@ def existing_pokedex():
 		return resolve_menu(MAIN, 'main')
 	owner_node = find_owner_bst(owner_root, owner_name)
 	if owner_node:
+		print('\n')
 		return resolve_menu(PERSONAL, 'pokedex', owner_node)
 	else:
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
 		return resolve_menu(MAIN, 'main')
 
 
-def execute_action(menu_map, owner_node=None):
+def execute_action(menu_map, title=None, owner_node=None):
+	if title:
+		print(title)
 	display_menu(menu_map)
 	check_choice = 'Invalid input.'
 	while check_choice == 'Invalid input.':
@@ -459,8 +462,7 @@ def execute_action(menu_map, owner_node=None):
 	action_label, action = menu_map[choice]
 
 	if (menu_map == PERSONAL and PERSONAL[choice][0] == 'Display Pokedex'
-	) or (owner_node and menu_map == MAIN and MAIN[choice][0] == 'Existing Pokedex'
-	) or (menu_map == TRAVERSAL
+	) or (owner_root and menu_map == TRAVERSAL
 	): print('\n')
 
 	if (menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]):
@@ -523,8 +525,7 @@ def resolve_menu(menu_map, title_key, owner_node=None):
 			if "{owner_name}" in title and owner_node:
 				title=title.format(owner_name=owner_node['owner'])
 			title = generate_output("subsection_title", title=title)
-		print(title)
-	execute_action(menu_map, owner_node)
+	execute_action(menu_map, title, owner_node)
 
 
 MAIN = {
