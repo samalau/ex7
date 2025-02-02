@@ -1,5 +1,4 @@
 # Samantha Newmark
-
 # Ex7
 
 import csv
@@ -219,7 +218,7 @@ def delete_owner_bst(root, owner_name):
 
 
 def print_owner_and_pokedex(node):
-	print(f"\n{generate_output("owner_info", owner_name=node['owner'])}")
+	print(f"\n{generate_output('owner_info', owner_name=node['owner'])}")
 	for pokemon in node['pokedex']:
 		print(generate_output("pokemon_info", **pokemon), "")
 
