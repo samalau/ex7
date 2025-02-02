@@ -1,5 +1,5 @@
 # Samantha Newmark
-
+#346587629
 # Ex7
 
 import csv
@@ -423,14 +423,14 @@ def existing_pokedex():
 	global owner_node
 
 	owner_name = prompt_user('owner_name')
-	print("\n")
-
+	
 	if not owner_root:
 		print("No owners at all.")
 		return resolve_menu('MAIN')
 	
 	owner_node = find_owner_bst(owner_root, owner_name)
 	if owner_node:
+		print("\n")
 		return resolve_menu('PERSONAL', owner_node)
 	else:
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
