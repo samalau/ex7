@@ -454,14 +454,13 @@ def execute_action(menu_map, owner_node=None):
 	
 	action_label, action = menu_map[choice]
 
-	if menu_map in [PERSONAL, FILTER]: 
+	if menu_map in [PERSONAL, FILTER]:
 		print_adjust = menu_map[choice][0]
-		if print_adjust in ['Display Pokedex', 'Back to Main', 'Back']:
-			print(f"{
-				'\n' if print_adjust == 'Display Pokedex'
-				else 'Back to Pokedex Menu.' if print_adjust == 'Back'
-				else 'Back to Main Menu.'
-			}")
+		if print_adjust in ['Display Pokedex', 'Back', 'Back to Main']:
+			if print_adjust == 'Display Pokedex':
+				print('\n')
+			else:
+				print(f"{'Back to Pokedex Menu.' if print_adjust == 'Back' else 'Back to Main Menu.'}")
 	
 	if callable(action):
 		try:
