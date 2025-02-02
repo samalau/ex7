@@ -1,4 +1,5 @@
 # Samantha Newmark
+
 # Ex7
 
 import csv
@@ -452,12 +453,15 @@ def execute_action(menu_map, owner_node=None):
 			choice = check_choice
 	
 	action_label, action = menu_map[choice]
-	
-	if menu_map == PERSONAL and choice == list(PERSONAL.keys())[-1]:
-		print("Back to Main Menu.")
-	
-	if menu_map == FILTER and choice == list(FILTER.keys())[-1]:
-		print("Back to Pokedex Menu.")
+
+	if menu_map in [PERSONAL, FILTER]: 
+		print_adjust = menu_map[choice][0]
+		if print_adjust in ['Display Pokedex', 'Back to Main', 'Back']:
+			print(f"{
+				'\n' if print_adjust == 'Display Pokedex'
+				else 'Back to Pokedex Menu.' if print_adjust == 'Back'
+				else 'Back to Main Menu.'
+			}")
 	
 	if callable(action):
 		try:
