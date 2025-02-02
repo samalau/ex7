@@ -1,5 +1,4 @@
 # Samantha Newmark
-#346587629
 # Ex7
 
 import csv
@@ -94,7 +93,6 @@ def create_owner_node(owner_name, first_pokemon=None):
 def delete_pokedex():
 	global owner_root
 	owner_name = prompt_user('owner_delete')
-	# owner_name = prompt_user('owner_delete').strip()
 	if not find_owner_bst(owner_root, owner_name):
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
 		return resolve_menu('MAIN')
@@ -176,7 +174,6 @@ def evolve_pokemon_by_name(owner_node):
 def add_pokemon_to_owner(owner_node):
 	try:
 		pokemon_id = prompt_user('pokename_add_id')
-		# pokemon_id = prompt_user('pokename_add_id').strip()
 
 		try: pokemon_id = int(pokemon_id)
 		except Exception: raise Exception
@@ -259,7 +256,6 @@ def filter_pokemon_by_type(owner_node):
 	try:
 		if any(p for p in owner_node['pokedex']):
 			pokemon_type = prompt_user('certain_poketype').lower()
-			# pokemon_type = prompt_user('certain_poketype').lower().strip()
 			if any(p['Type'].lower().strip() == pokemon_type.lower().strip() for p in owner_node['pokedex']):
 				for pokemon in owner_node['pokedex']:
 					if pokemon['Type'].lower().strip() == pokemon_type:
@@ -491,7 +487,6 @@ def generate_output(template_key, **kwargs):
 
 def prompt_user(prompt_key):
 	response = input(PROMPT[prompt_key] + " ")
-	# response = input(PROMPT[prompt_key] + " ").strip()
 	return response
 
 
