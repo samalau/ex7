@@ -1,4 +1,5 @@
 # Samantha Newmark
+
 # Ex7
 
 import csv
@@ -39,7 +40,8 @@ def new_pokedex():
 	global owner_root
 	sorted_owners = []
 	gather_all_owners(owner_root, sorted_owners)
-	owner_name = prompt_user('owner_name').strip()
+	owner_name = prompt_user('owner_name')
+	# owner_name = prompt_user('owner_name').strip()
 	try:
 		if any(owner['owner'].lower().strip() == owner_name.lower().strip() for owner in sorted_owners):
 			raise Exception
@@ -91,7 +93,8 @@ def create_owner_node(owner_name, first_pokemon=None):
 
 def delete_pokedex():
 	global owner_root
-	owner_name = prompt_user('owner_delete').strip()
+	owner_name = prompt_user('owner_delete')
+	# owner_name = prompt_user('owner_delete').strip()
 	if not find_owner_bst(owner_root, owner_name):
 		print(generate_output("pokedex_not_found", owner_name=owner_name))
 		return resolve_menu('MAIN')
@@ -172,7 +175,8 @@ def evolve_pokemon_by_name(owner_node):
 
 def add_pokemon_to_owner(owner_node):
 	try:
-		pokemon_id = prompt_user('pokename_add_id').strip()
+		pokemon_id = prompt_user('pokename_add_id')
+		# pokemon_id = prompt_user('pokename_add_id').strip()
 
 		try: pokemon_id = int(pokemon_id)
 		except Exception: raise Exception
@@ -215,9 +219,9 @@ def delete_owner_bst(root, owner_name):
 
 
 def print_owner_and_pokedex(node):
-	print(generate_output("owner_info", owner_name=node['owner']))
+	print(f"\n{generate_output("owner_info", owner_name=node['owner'])}")
 	for pokemon in node['pokedex']:
-		print(generate_output("pokemon_info", **pokemon))
+		print(generate_output("pokemon_info", **pokemon), "")
 
 
 def bfs_traversal(root):
@@ -254,7 +258,8 @@ def post_order_traversal(root):
 def filter_pokemon_by_type(owner_node):
 	try:
 		if any(p for p in owner_node['pokedex']):
-			pokemon_type = prompt_user('certain_poketype').lower().strip()
+			pokemon_type = prompt_user('certain_poketype').lower()
+			# pokemon_type = prompt_user('certain_poketype').lower().strip()
 			if any(p['Type'].lower().strip() == pokemon_type.lower().strip() for p in owner_node['pokedex']):
 				for pokemon in owner_node['pokedex']:
 					if pokemon['Type'].lower().strip() == pokemon_type:
@@ -395,7 +400,9 @@ def print_all_owners():
 	gather_all_owners(owner_root, sorted_owners)
 
 	if sorted_owners:
-		return resolve_menu('TRAVERSAL')
+		resolve_menu('TRAVERSAL')
+		print("\n")
+		return resolve_menu('MAIN')
 	else:
 		print("No owners at all.")
 		return resolve_menu('MAIN')
@@ -415,7 +422,8 @@ def display_all_pokemon(owner_node):
 def existing_pokedex():
 	global owner_node
 
-	owner_name = prompt_user('owner_name').strip()
+	owner_name = prompt_user('owner_name')
+	print("\n")
 
 	if not owner_root:
 		print("No owners at all.")
@@ -441,7 +449,8 @@ def execute_action(menu_map, owner_node=None):
 			elif menu_map == PERSONAL: return resolve_menu('PERSONAL', owner_node=owner_node)
 			elif menu_map == FILTER: return resolve_menu('FILTER', owner_node)
 			else: return resolve_menu('MAIN')
-		if check_choice != 'Invalid input.': choice = check_choice
+		if check_choice != 'Invalid input.':
+			choice = check_choice
 	
 	action_label, action = menu_map[choice]
 	
@@ -479,7 +488,8 @@ def generate_output(template_key, **kwargs):
 
 
 def prompt_user(prompt_key):
-	response = input(PROMPT[prompt_key] + " ").strip()
+	response = input(PROMPT[prompt_key] + " ")
+	# response = input(PROMPT[prompt_key] + " ").strip()
 	return response
 
 
